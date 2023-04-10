@@ -43,6 +43,11 @@ defmodule Instaclone.Identity.PasswordUser do
     |> validate_password(opts)
   end
 
+  def associate_user_changeset(password_user, attrs, _opts \\ []) do
+    password_user
+    |> cast(attrs, [:user_id])
+  end
+
   defp validate_email(changeset, opts) do
     changeset
     |> validate_required([:email])

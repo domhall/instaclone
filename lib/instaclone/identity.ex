@@ -77,13 +77,11 @@ defmodule Instaclone.Identity do
   """
   def register_password_user(attrs) do
     email = attrs["email"]
-    {:ok, registered_user} = InstacloneDomain.IdentityContext.register_user(email)
-    IO.puts("here here")
-    IO.inspect(registered_user)
-    attrs = Map.put(attrs, "user_id", registered_user[:id])
+    registered_user = InstacloneDomain.IdentityContext.register_user(email)
 
     %PasswordUser{}
     |> PasswordUser.registration_changeset(attrs)
+    |> PasswordUser.associate_user_changeset(%{user_id: registered_user[:id]})
     |> Repo.insert()
   end
 

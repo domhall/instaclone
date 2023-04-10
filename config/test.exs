@@ -35,3 +35,7 @@ config :logger, level: :warning
 
 # Initialize plugs at runtime for faster test compilation
 config :phoenix, :plug_init_mode, :runtime
+
+# Mocks
+config :instaclone, :identity_domain,
+  ports: [user_repository: InstacloneDomain.IdentityContext.Ports.StubUserRepository]
