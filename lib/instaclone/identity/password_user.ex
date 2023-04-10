@@ -8,6 +8,7 @@ defmodule Instaclone.Identity.PasswordUser do
     field :password, :string, virtual: true, redact: true
     field :hashed_password, :string, redact: true
     field :confirmed_at, :naive_datetime
+    field :user_id, :binary_id
 
     timestamps()
   end
@@ -37,7 +38,7 @@ defmodule Instaclone.Identity.PasswordUser do
   """
   def registration_changeset(password_user, attrs, opts \\ []) do
     password_user
-    |> cast(attrs, [:email, :password])
+    |> cast(attrs, [:email, :password, :user_id])
     |> validate_email(opts)
     |> validate_password(opts)
   end
@@ -136,7 +137,10 @@ defmodule Instaclone.Identity.PasswordUser do
   If there is no password_user or the password_user doesn't have a password, we call
   `Bcrypt.no_user_verify/0` to avoid timing attacks.
   """
-  def valid_password?(%Instaclone.Identity.PasswordUser{hashed_password: hashed_password}, password)
+  def valid_password?(
+        %Instaclone.Identity.PasswordUser{hashed_password: hashed_password},
+        password
+      )
       when is_binary(hashed_password) and byte_size(password) > 0 do
     Bcrypt.verify_pass(password, hashed_password)
   end

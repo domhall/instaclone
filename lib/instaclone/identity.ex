@@ -1,4 +1,5 @@
 defmodule Instaclone.Identity do
+  # @behaviour InstacloneDomain.IdentityContext.Ports.UserRepository
   @moduledoc """
   The Identity context.
   """
@@ -75,6 +76,12 @@ defmodule Instaclone.Identity do
 
   """
   def register_password_user(attrs) do
+    email = attrs["email"]
+    {:ok, registered_user} = InstacloneDomain.IdentityContext.register_user(email)
+    IO.puts("here here")
+    IO.inspect(registered_user)
+    attrs = Map.put(attrs, "user_id", registered_user[:id])
+
     %PasswordUser{}
     |> PasswordUser.registration_changeset(attrs)
     |> Repo.insert()
@@ -90,7 +97,10 @@ defmodule Instaclone.Identity do
 
   """
   def change_password_user_registration(%PasswordUser{} = password_user, attrs \\ %{}) do
-    PasswordUser.registration_changeset(password_user, attrs, hash_password: false, validate_email: false)
+    PasswordUser.registration_changeset(password_user, attrs,
+      hash_password: false,
+      validate_email: false
+    )
   end
 
   ## Settings
@@ -154,7 +164,10 @@ defmodule Instaclone.Identity do
 
     Ecto.Multi.new()
     |> Ecto.Multi.update(:password_user, changeset)
-    |> Ecto.Multi.delete_all(:tokens, PasswordUserToken.password_user_and_contexts_query(password_user, [context]))
+    |> Ecto.Multi.delete_all(
+      :tokens,
+      PasswordUserToken.password_user_and_contexts_query(password_user, [context])
+    )
   end
 
   @doc ~S"""
@@ -166,12 +179,21 @@ defmodule Instaclone.Identity do
       {:ok, %{to: ..., body: ...}}
 
   """
-  def deliver_password_user_update_email_instructions(%PasswordUser{} = password_user, current_email, update_email_url_fun)
+  def deliver_password_user_update_email_instructions(
+        %PasswordUser{} = password_user,
+        current_email,
+        update_email_url_fun
+      )
       when is_function(update_email_url_fun, 1) do
-    {encoded_token, password_user_token} = PasswordUserToken.build_email_token(password_user, "change:#{current_email}")
+    {encoded_token, password_user_token} =
+      PasswordUserToken.build_email_token(password_user, "change:#{current_email}")
 
     Repo.insert!(password_user_token)
-    PasswordUserNotifier.deliver_update_email_instructions(password_user, update_email_url_fun.(encoded_token))
+
+    PasswordUserNotifier.deliver_update_email_instructions(
+      password_user,
+      update_email_url_fun.(encoded_token)
+    )
   end
 
   @doc """
@@ -207,7 +229,10 @@ defmodule Instaclone.Identity do
 
     Ecto.Multi.new()
     |> Ecto.Multi.update(:password_user, changeset)
-    |> Ecto.Multi.delete_all(:tokens, PasswordUserToken.password_user_and_contexts_query(password_user, :all))
+    |> Ecto.Multi.delete_all(
+      :tokens,
+      PasswordUserToken.password_user_and_contexts_query(password_user, :all)
+    )
     |> Repo.transaction()
     |> case do
       {:ok, %{password_user: password_user}} -> {:ok, password_user}
@@ -256,14 +281,23 @@ defmodule Instaclone.Identity do
       {:error, :already_confirmed}
 
   """
-  def deliver_password_user_confirmation_instructions(%PasswordUser{} = password_user, confirmation_url_fun)
+  def deliver_password_user_confirmation_instructions(
+        %PasswordUser{} = password_user,
+        confirmation_url_fun
+      )
       when is_function(confirmation_url_fun, 1) do
     if password_user.confirmed_at do
       {:error, :already_confirmed}
     else
-      {encoded_token, password_user_token} = PasswordUserToken.build_email_token(password_user, "confirm")
+      {encoded_token, password_user_token} =
+        PasswordUserToken.build_email_token(password_user, "confirm")
+
       Repo.insert!(password_user_token)
-      PasswordUserNotifier.deliver_confirmation_instructions(password_user, confirmation_url_fun.(encoded_token))
+
+      PasswordUserNotifier.deliver_confirmation_instructions(
+        password_user,
+        confirmation_url_fun.(encoded_token)
+      )
     end
   end
 
@@ -276,7 +310,8 @@ defmodule Instaclone.Identity do
   def confirm_password_user(token) do
     with {:ok, query} <- PasswordUserToken.verify_email_token_query(token, "confirm"),
          %PasswordUser{} = password_user <- Repo.one(query),
-         {:ok, %{password_user: password_user}} <- Repo.transaction(confirm_password_user_multi(password_user)) do
+         {:ok, %{password_user: password_user}} <-
+           Repo.transaction(confirm_password_user_multi(password_user)) do
       {:ok, password_user}
     else
       _ -> :error
@@ -286,7 +321,10 @@ defmodule Instaclone.Identity do
   defp confirm_password_user_multi(password_user) do
     Ecto.Multi.new()
     |> Ecto.Multi.update(:password_user, PasswordUser.confirm_changeset(password_user))
-    |> Ecto.Multi.delete_all(:tokens, PasswordUserToken.password_user_and_contexts_query(password_user, ["confirm"]))
+    |> Ecto.Multi.delete_all(
+      :tokens,
+      PasswordUserToken.password_user_and_contexts_query(password_user, ["confirm"])
+    )
   end
 
   ## Reset password
@@ -300,11 +338,20 @@ defmodule Instaclone.Identity do
       {:ok, %{to: ..., body: ...}}
 
   """
-  def deliver_password_user_reset_password_instructions(%PasswordUser{} = password_user, reset_password_url_fun)
+  def deliver_password_user_reset_password_instructions(
+        %PasswordUser{} = password_user,
+        reset_password_url_fun
+      )
       when is_function(reset_password_url_fun, 1) do
-    {encoded_token, password_user_token} = PasswordUserToken.build_email_token(password_user, "reset_password")
+    {encoded_token, password_user_token} =
+      PasswordUserToken.build_email_token(password_user, "reset_password")
+
     Repo.insert!(password_user_token)
-    PasswordUserNotifier.deliver_reset_password_instructions(password_user, reset_password_url_fun.(encoded_token))
+
+    PasswordUserNotifier.deliver_reset_password_instructions(
+      password_user,
+      reset_password_url_fun.(encoded_token)
+    )
   end
 
   @doc """
@@ -343,7 +390,10 @@ defmodule Instaclone.Identity do
   def reset_password_user_password(password_user, attrs) do
     Ecto.Multi.new()
     |> Ecto.Multi.update(:password_user, PasswordUser.password_changeset(password_user, attrs))
-    |> Ecto.Multi.delete_all(:tokens, PasswordUserToken.password_user_and_contexts_query(password_user, :all))
+    |> Ecto.Multi.delete_all(
+      :tokens,
+      PasswordUserToken.password_user_and_contexts_query(password_user, :all)
+    )
     |> Repo.transaction()
     |> case do
       {:ok, %{password_user: password_user}} -> {:ok, password_user}

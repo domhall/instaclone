@@ -21,6 +21,10 @@ config :instaclone, InstacloneWeb.Endpoint,
   live_view: [signing_salt: "c98okXvI"]
 
 config :instaclone, :generators, binary_id: true
+
+config :instaclone, :identity_domain,
+  ports: [user_repository: Instaclone.Identity.Adaptors.UserRepository]
+
 # Configures the mailer
 #
 # By default it uses the "Local" adapter which stores the emails
