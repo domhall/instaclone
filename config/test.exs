@@ -38,4 +38,4 @@ config :phoenix, :plug_init_mode, :runtime
 
 # Mocks
 config :instaclone, :identity_domain,
-  ports: [user_repository: InstacloneDomain.IdentityContext.Ports.StubUserRepository]
+  ports: [user_repository: InstacloneDomain.IdentityContext.Adaptors.StubUserRepository]

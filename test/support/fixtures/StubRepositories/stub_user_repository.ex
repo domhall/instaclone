@@ -1,4 +1,4 @@
-defmodule InstacloneDomain.IdentityContext.Ports.StubUserRepository do
+defmodule InstacloneDomain.IdentityContext.Adaptors.StubUserRepository do
   @behaviour InstacloneDomain.IdentityContext.Ports.UserRepository
 
   @impl true
