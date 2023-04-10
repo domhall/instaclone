@@ -11,7 +11,8 @@ defmodule InstacloneDomain.IdentityContext do
 
   @spec get_user(id :: String.t()) :: Models.user()
   def get_user(id) do
-    @user_repository.get_user_by_id(id)
+    {:ok, user} = @user_repository.get_user_by_id(id)
+    user
   end
 
   @spec register_user(email :: String.t()) :: Models.user()

@@ -90,8 +90,12 @@ defmodule InstacloneWeb.PasswordUserAuth do
   """
   def fetch_current_password_user(conn, _opts) do
     {password_user_token, conn} = ensure_password_user_token(conn)
-    password_user = password_user_token && Identity.get_password_user_by_session_token(password_user_token)
-    assign(conn, :current_password_user, password_user)
+
+    password_user =
+      password_user_token && Identity.get_password_user_by_session_token(password_user_token)
+
+    conn = assign(conn, :current_password_user, password_user)
+    InstacloneWeb.UserContextAdaptor.fetch_current_user(conn, Map.get(password_user, :user_id))
   end
 
   defp ensure_password_user_token(conn) do
