@@ -20,6 +20,7 @@ config :instaclone, InstacloneWeb.Endpoint,
   pubsub_server: Instaclone.PubSub,
   live_view: [signing_salt: "c98okXvI"]
 
+config :instaclone, :generators, binary_id: true
 # Configures the mailer
 #
 # By default it uses the "Local" adapter which stores the emails
