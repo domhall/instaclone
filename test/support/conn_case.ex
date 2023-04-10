@@ -35,4 +35,30 @@ defmodule InstacloneWeb.ConnCase do
     Instaclone.DataCase.setup_sandbox(tags)
     {:ok, conn: Phoenix.ConnTest.build_conn()}
   end
+
+  @doc """
+  Setup helper that registers and logs in password_users.
+
+      setup :register_and_log_in_password_user
+
+  It stores an updated connection and a registered password_user in the
+  test context.
+  """
+  def register_and_log_in_password_user(%{conn: conn}) do
+    password_user = Instaclone.IdentityFixtures.password_user_fixture()
+    %{conn: log_in_password_user(conn, password_user), password_user: password_user}
+  end
+
+  @doc """
+  Logs the given `password_user` into the `conn`.
+
+  It returns an updated `conn`.
+  """
+  def log_in_password_user(conn, password_user) do
+    token = Instaclone.Identity.generate_password_user_session_token(password_user)
+
+    conn
+    |> Phoenix.ConnTest.init_test_session(%{})
+    |> Plug.Conn.put_session(:password_user_token, token)
+  end
 end
