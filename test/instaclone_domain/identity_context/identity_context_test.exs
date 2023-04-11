@@ -9,8 +9,18 @@ defmodule InstacloneDomain.IdentityContext.IdentityContextTest do
   end
 
   describe "Get an existing user" do
-    user = InstacloneDomain.IdentityContext.get_user("test-uuid")
-    assert user.id == "test-uuid"
-    assert user.email == "fake@example.com"
+    test "Can get an existing user" do
+      user = InstacloneDomain.IdentityContext.get_user("test-uuid")
+      assert user.id == "test-uuid"
+      assert user.email == "fake@example.com"
+    end
+  end
+
+  describe "Update an existing user" do
+    test "Can add a profile to a user" do
+      profile = InstacloneDomain.IdentityContext.create_profile("test-uuid", "dom")
+      assert profile.handle == "dom"
+      assert profile.user.email == "fake@example.com"
+    end
   end
 end

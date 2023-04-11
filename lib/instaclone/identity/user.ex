@@ -6,7 +6,7 @@ defmodule Instaclone.Identity.User do
   @foreign_key_type :binary_id
   schema "users" do
     field :email, :string
-
+    has_many :profiles, Instaclone.Identity.Profile
     timestamps()
   end
 
