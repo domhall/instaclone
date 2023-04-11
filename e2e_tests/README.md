@@ -4,6 +4,10 @@
         pip install -r requirements.txt
         rfbrowser init
 
+# Starting the service for e2e
+
+        MIX_ENV=e2e mix ecto.drop && MIX_ENV=e2e mix setup && MIX_ENV=e2e mix phx.server
+
 # Getting completion in vscode
 
 - I don't actually know how to configure this properly
