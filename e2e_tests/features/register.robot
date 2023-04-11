@@ -1,6 +1,6 @@
 *** Settings ***
 Resource    ../keywords/home.robot
-Resource    ../keywords/form.robot
+Resource    ../keywords/generic_page/index.robot
 Library     Browser
 *** Tasks ***
 Registration test

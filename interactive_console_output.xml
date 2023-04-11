@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<robot generator="Robot 6.0.2 (Python 3.11.2 on darwin)" generated="20230411 02:20:13.666" rpa="false" schemaversion="3">
+<suite id="s1" name="Robot Interactive Console" source="/Users/dhall/.vscode/extensions/robocorp.robotframework-lsp-1.9.0/src/robotframework_ls/vendored/robotframework_interactive/robot_interactive_console.robot">
+<test id="s1-t1" name="Default Task/Test" line="5">
+<kw name="Interpreter Main Loop" library="MainLoop">
+<kw name="Given I navigate to the password registration page">
+<msg timestamp="20230411 02:20:14.655" level="FAIL">No keyword with name 'Given I navigate to the password registration page' found.</msg>
+<status status="FAIL" starttime="20230411 02:20:14.655" endtime="20230411 02:20:14.655"/>
+</kw>
+<kw name="And I enter an email &quot;test@example.com&quot; and password &quot;test123456789&quot;">
+<status status="NOT RUN" starttime="20230411 02:20:14.658" endtime="20230411 02:20:14.658"/>
+</kw>
+<kw name="When I click the &quot;Create an account&quot; button">
+<status status="NOT RUN" starttime="20230411 02:20:14.660" endtime="20230411 02:20:14.660"/>
+</kw>
+<kw name="Then I see the &quot;Account created successfully!&quot; text">
+<status status="NOT RUN" starttime="20230411 02:20:14.662" endtime="20230411 02:20:14.662"/>
+</kw>
+<kw name="And I see the &quot;test@example.com&quot; text">
+<status status="NOT RUN" starttime="20230411 02:20:14.665" endtime="20230411 02:20:14.665"/>
+</kw>
+<status status="PASS" starttime="20230411 02:20:13.690" endtime="20230411 02:20:15.640"/>
+</kw>
+<status status="PASS" starttime="20230411 02:20:13.689" endtime="20230411 02:20:15.640"/>
+</test>
+<status status="PASS" starttime="20230411 02:20:13.667" endtime="20230411 02:20:15.641"/>
+</suite>
+<statistics>
+<total>
+<stat pass="1" fail="0" skip="0">All Tests</stat>
+</total>
+<tag>
+</tag>
+<suite>
+<stat pass="1" fail="0" skip="0" id="s1" name="Robot Interactive Console">Robot Interactive Console</stat>
+</suite>
+</statistics>
+<errors>
+</errors>
+</robot>
