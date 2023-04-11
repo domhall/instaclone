@@ -8,6 +8,7 @@ Registration test
         And I enter an email "test@example.com" and password "test123456789"
     When I click the "Create an account" button
     Then I see the "Account created successfully!" text
+        And I see the "test@example.com" text
 # Account created successfully!    
 *** Keywords ***
 I navigate to the password registration page
