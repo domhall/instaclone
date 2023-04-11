@@ -29,10 +29,19 @@ defmodule InstacloneWeb.PasswordUserSettingsLiveTest do
     setup %{conn: conn} do
       password = valid_password_user_password()
       password_user = password_user_fixture(%{password: password})
-      %{conn: log_in_password_user(conn, password_user), password_user: password_user, password: password}
+
+      %{
+        conn: log_in_password_user(conn, password_user),
+        password_user: password_user,
+        password: password
+      }
     end
 
-    test "updates the password_user email", %{conn: conn, password: password, password_user: password_user} do
+    test "updates the password_user email", %{
+      conn: conn,
+      password: password,
+      password_user: password_user
+    } do
       new_email = unique_password_user_email()
 
       {:ok, lv, _html} = live(conn, ~p"/password_users/settings")
@@ -65,7 +74,10 @@ defmodule InstacloneWeb.PasswordUserSettingsLiveTest do
       assert result =~ "must have the @ sign and no spaces"
     end
 
-    test "renders errors with invalid data (phx-submit)", %{conn: conn, password_user: password_user} do
+    test "renders errors with invalid data (phx-submit)", %{
+      conn: conn,
+      password_user: password_user
+    } do
       {:ok, lv, _html} = live(conn, ~p"/password_users/settings")
 
       result =
@@ -85,11 +97,22 @@ defmodule InstacloneWeb.PasswordUserSettingsLiveTest do
   describe "update password form" do
     setup %{conn: conn} do
       password = valid_password_user_password()
-      password_user = password_user_fixture(%{password: password})
-      %{conn: log_in_password_user(conn, password_user), password_user: password_user, password: password}
+      password_user = password_user_form_fixture(%{password: password})
+      # form_password_user = password_user_form_fixture(%{password: password})
+
+      %{
+        conn: log_in_password_user(conn, password_user),
+        password_user: password_user,
+        # form_password_user: form_password_user,
+        password: password
+      }
     end
 
-    test "updates the password_user password", %{conn: conn, password_user: password_user, password: password} do
+    test "updates the password_user password", %{
+      conn: conn,
+      password_user: password_user,
+      password: password
+    } do
       new_password = valid_password_user_password()
 
       {:ok, lv, _html} = live(conn, ~p"/password_users/settings")
@@ -110,12 +133,16 @@ defmodule InstacloneWeb.PasswordUserSettingsLiveTest do
 
       assert redirected_to(new_password_conn) == ~p"/password_users/settings"
 
-      assert get_session(new_password_conn, :password_user_token) != get_session(conn, :password_user_token)
+      assert get_session(new_password_conn, :password_user_token) !=
+               get_session(conn, :password_user_token)
 
       assert Phoenix.Flash.get(new_password_conn.assigns.flash, :info) =~
                "Password updated successfully"
 
-      assert Identity.get_password_user_by_email_and_password(password_user.email, new_password)
+      assert Identity.get_password_user_by_email_and_password(
+               password_user.email,
+               new_password
+             )
     end
 
     test "renders errors with invalid data (phx-change)", %{conn: conn} do
@@ -165,13 +192,27 @@ defmodule InstacloneWeb.PasswordUserSettingsLiveTest do
 
       token =
         extract_password_user_token(fn url ->
-          Identity.deliver_password_user_update_email_instructions(%{password_user | email: email}, password_user.email, url)
+          Identity.deliver_password_user_update_email_instructions(
+            %{password_user | email: email},
+            password_user.email,
+            url
+          )
         end)
 
-      %{conn: log_in_password_user(conn, password_user), token: token, email: email, password_user: password_user}
+      %{
+        conn: log_in_password_user(conn, password_user),
+        token: token,
+        email: email,
+        password_user: password_user
+      }
     end
 
-    test "updates the password_user email once", %{conn: conn, password_user: password_user, token: token, email: email} do
+    test "updates the password_user email once", %{
+      conn: conn,
+      password_user: password_user,
+      token: token,
+      email: email
+    } do
       {:error, redirect} = live(conn, ~p"/password_users/settings/confirm_email/#{token}")
 
       assert {:live_redirect, %{to: path, flash: flash}} = redirect

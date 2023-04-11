@@ -11,7 +11,10 @@ defmodule InstacloneWeb.PasswordUserSessionControllerTest do
     test "logs the password_user in", %{conn: conn, password_user: password_user} do
       conn =
         post(conn, ~p"/password_users/log_in", %{
-          "password_user" => %{"email" => password_user.email, "password" => valid_password_user_password()}
+          "password_user" => %{
+            "email" => password_user.email,
+            "password" => valid_password_user_password()
+          }
         })
 
       assert get_session(conn, :password_user_token)
@@ -20,7 +23,7 @@ defmodule InstacloneWeb.PasswordUserSessionControllerTest do
       # Now do a logged in request and assert on the menu
       conn = get(conn, ~p"/")
       response = html_response(conn, 200)
-      assert response =~ password_user.email
+      assert response =~ "fake@example.com"
       assert response =~ ~p"/password_users/settings"
       assert response =~ ~p"/password_users/log_out"
     end

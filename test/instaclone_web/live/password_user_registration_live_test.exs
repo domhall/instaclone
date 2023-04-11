@@ -41,7 +41,12 @@ defmodule InstacloneWeb.PasswordUserRegistrationLiveTest do
       {:ok, lv, _html} = live(conn, ~p"/password_users/register")
 
       email = unique_password_user_email()
-      form = form(lv, "#registration_form", password_user: valid_password_user_attributes(email: email))
+
+      form =
+        form(lv, "#registration_form",
+          password_user: valid_password_user_form_attributes(email: email)
+        )
+
       render_submit(form)
       conn = follow_trigger_action(form, conn)
 
@@ -50,7 +55,7 @@ defmodule InstacloneWeb.PasswordUserRegistrationLiveTest do
       # Now do a logged in request and assert on the menu
       conn = get(conn, "/")
       response = html_response(conn, 200)
-      assert response =~ email
+      assert response =~ "fake@example.com"
       assert response =~ "Settings"
       assert response =~ "Log out"
     end

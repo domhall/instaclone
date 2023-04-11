@@ -10,6 +10,14 @@ defmodule Instaclone.IdentityFixtures do
   def valid_password_user_attributes(attrs \\ %{}) do
     Enum.into(attrs, %{
       email: unique_password_user_email(),
+      password: valid_password_user_password(),
+      user_id: Ecto.UUID.generate()
+    })
+  end
+
+  def valid_password_user_form_attributes(attrs \\ %{}) do
+    Enum.into(attrs, %{
+      email: unique_password_user_email(),
       password: valid_password_user_password()
     })
   end
@@ -18,6 +26,15 @@ defmodule Instaclone.IdentityFixtures do
     {:ok, password_user} =
       attrs
       |> valid_password_user_attributes()
+      |> Instaclone.Identity.register_password_user()
+
+    password_user
+  end
+
+  def password_user_form_fixture(attrs \\ %{}) do
+    {:ok, password_user} =
+      attrs
+      |> valid_password_user_form_attributes()
       |> Instaclone.Identity.register_password_user()
 
     password_user
