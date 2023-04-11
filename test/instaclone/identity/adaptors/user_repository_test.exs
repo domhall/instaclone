@@ -10,7 +10,7 @@ defmodule Instaclone.Identity.Adaptors.UserRepositoryTest do
       assert user.email == "a-fresh-email@example.com"
     end
 
-    test "can get user" do
+    test "can get a user" do
       {:ok, %{id: id}} = UserRepository.create_user("a-fresh-email-2@example.com")
       {:ok, user} = UserRepository.get_user_by_id(id)
       assert user.email == "a-fresh-email-2@example.com"
