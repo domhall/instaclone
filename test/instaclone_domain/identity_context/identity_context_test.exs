@@ -7,4 +7,10 @@ defmodule InstacloneDomain.IdentityContext.IdentityContextTest do
       assert user.email == "test.email@example.com"
     end
   end
+
+  describe "Get an existing user" do
+    user = InstacloneDomain.IdentityContext.get_user("test-uuid")
+    assert user.id == "test-uuid"
+    assert user.email == "fake@example.com"
+  end
 end
